@@ -38,13 +38,13 @@ func (b Battery) Label() string {
 
 // NotificationLevel outputs notify-send levels according to remaining battery
 func (b Battery) NotificationLevel() string {
-	if b.Percent <= 0.1 {
+	if b.Percent <= 0.2 {
 		return "critical"
 	}
-	if b.Percent <= 0.2 {
+	if b.Percent <= 0.3 {
 		return "normal"
 	}
-	if b.Percent <= 0.3 {
+	if b.Percent <= 0.4 {
 		return "low"
 	}
 	return ""

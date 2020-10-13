@@ -60,10 +60,10 @@ func TestBatteryNotificationLevel(t *testing.T) {
 		Battery Battery
 		Expect  string
 	}{
-		{Battery{0.1}, "critical"},
-		{Battery{0.2}, "normal"},
-		{Battery{0.3}, "low"},
-		{Battery{0.4}, ""},
+		{Battery{0.2}, "critical"},
+		{Battery{0.3}, "normal"},
+		{Battery{0.4}, "low"},
+		{Battery{0.5}, ""},
 	} {
 		if l := tc.Battery.NotificationLevel(); l != tc.Expect {
 			t.Errorf("Expected %s, but got %s", tc.Expect, l)
@@ -77,10 +77,10 @@ func TestBatteryColor(t *testing.T) {
 		Battery Battery
 		Expect  string
 	}{
-		{Battery{0.1}, "#EF3340"},
-		{Battery{0.2}, "#FF8000"},
-		{Battery{0.3}, "#EFEFEF"},
-		{Battery{0.4}, ""},
+		{Battery{0.2}, "#EF3340"},
+		{Battery{0.3}, "#FF8000"},
+		{Battery{0.4}, "#EFEFEF"},
+		{Battery{0.5}, ""},
 	} {
 		if l := tc.Battery.Color(); l != tc.Expect {
 			t.Errorf("Expected %s, but got %s", tc.Expect, l)
