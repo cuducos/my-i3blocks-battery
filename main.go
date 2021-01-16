@@ -7,11 +7,13 @@ import (
 	"os/exec"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 // Battery handles its label and notification level based on its remaining energy
 type Battery struct {
-	Percent float64
+	Percent  float64
+	Charging bool
 }
 
 // Represents the battery in a human-readable strung such as 42%
@@ -21,6 +23,9 @@ func (b Battery) String() string {
 
 // Label uses Font-Awesome 5 glyphs to create a visual label for the battery
 func (b Battery) Label() string {
+	if b.Charging {
+		return ""
+	}
 	if b.Percent <= 0.1 {
 		return ""
 	}
@@ -88,31 +93,30 @@ func (x AcpiRunner) Run(cmd []string) string {
 }
 
 // GetBattery creates a `Battery` from an `acpi` output (`n` is the battery number)
-func GetBattery(r Runner, n int) Battery {
-	re := regexp.MustCompile(`Battery (\d+): [\w ]+, (\d+)%`)
+func GetBattery(r Runner) (b Battery, err error) {
 	out := r.Run([]string{})
-	s := strconv.Itoa(n)
-	b := Battery{0.0}
-
+	re := regexp.MustCompile(`Battery (\d+): [\w ]+, (\d+)%`)
 	for _, m := range re.FindAllStringSubmatch(out, -1) {
-		if m[1] != s {
-			continue
-		}
-
 		i, err := strconv.Atoi(m[2])
 		if err != nil {
-			log.Fatal(err)
+			continue
 		}
 		b.Percent = float64(i) / float64(100)
+		b.Charging = strings.Contains(out, "Charging")
+		if b.Percent != 0.0 {
+			return b, err
+		}
 	}
 
-	if b.Percent == 0.0 {
-		log.Fatalf("Cannot find battery %d in:\n%s", n, out)
-	}
-	return b
+	err = fmt.Errorf("Cannot find battery in:\n%s", out)
+	return b, err
 }
 
 // Prints the i3block 4-lines
 func main() {
-	fmt.Println(GetBattery(AcpiRunner{}, 1).I3Block())
+	b, err := GetBattery(AcpiRunner{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(b.I3Block())
 }
