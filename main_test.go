@@ -2,14 +2,16 @@ package main
 
 import "testing"
 
-const full = `Battery 0: Unknown, 0%, rate information unavailable\n
+const (
+	full = `Battery 0: Unknown, 0%, rate information unavailable\n
 Battery 1: Not charging, 100%`
 
-const discharging = `Battery 0: Unknown, 0%, rate information unavailable
+	discharging = `Battery 0: Unknown, 0%, rate information unavailable
 Battery 1: Discharging, 99%, 02:15:24 remaining`
 
-const charging = `Battery 0: Unknown, 0%, rate information unavailable
+	charging = `Battery 0: Unknown, 0%, rate information unavailable
 Battery 1: Charging, 99%, 02:15:24 remaining`
+)
 
 type MockFullRunner struct{}
 

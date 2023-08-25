@@ -89,7 +89,7 @@ func (x AcpiRunner) Run(cmd []string) string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return fmt.Sprintf("%s", out)
+	return fmt.Sprint(string(out))
 }
 
 // GetBattery creates a `Battery` from an `acpi` output (`n` is the battery number)
@@ -108,7 +108,7 @@ func GetBattery(r Runner) (b Battery, err error) {
 		}
 	}
 
-	err = fmt.Errorf("Cannot find battery in:\n%s", out)
+	err = fmt.Errorf("cannot find battery in:\n%s", out)
 	return b, err
 }
 
